@@ -78,12 +78,15 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	stmt, err := db.Prepare("INSERT INTO user(email, name, nickname, avatar) VALUES(?,?,?,?)")
 	if err != nil {
+		fmt.Println("pasa 1")
 		log.Fatal(err)
 	}
 	_, err = stmt.Exec(user.Email, user.Name, user.Nickname, user.Avatar)
 	if err != nil {
+		fmt.Println("pasa 2")
 		log.Fatal(err)
 	}
+	fmt.Println("pasa 3")
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusCreated)
