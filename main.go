@@ -15,6 +15,11 @@ func main() {
 	r.HandleFunc("/users/{id}", handlers.UserHandler).Methods("GET")
 	r.HandleFunc("/users", handlers.AddUserHandler).Methods("POST")
 
+	r.HandleFunc("/circuits", handlers.AllCircuitsHandler).Methods("GET")
+	r.HandleFunc("/circuits/{id}", handlers.CircuitHandler).Methods("GET")
+
+	r.HandleFunc("/categories/{category}/pilots", handlers.PilotsHandler).Methods("GET")
+
 	http.ListenAndServe(":8888", corsHandler(r))
 }
 
