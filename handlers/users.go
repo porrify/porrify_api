@@ -3,11 +3,9 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"io"
-	"io/ioutil"
+	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	// Import mysql driver
 	_ "github.com/go-sql-driver/mysql"
@@ -18,11 +16,7 @@ import (
 // UserHandler returns a user
 func UserHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		log.Println(err.Error())
-		return
-	}
+	id := vars["id"]
 
 	var user models.User
 
@@ -32,22 +26,10 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := db.Query("SELECT * FROM user WHERE id = ?", id)
+	err = db.QueryRow("SELECT * FROM user WHERE id = ?", id).
+		Scan(&user.ID, &user.Email, &user.Name, &user.Nickname, &user.Avatar)
 	if err != nil {
-		log.Println(err.Error())
-		return
-	}
-	defer rows.Close()
-	for rows.Next() {
-		err := rows.Scan(&user.ID, &user.Email, &user.Name, &user.Nickname, &user.Avatar)
-		if err != nil {
-			log.Println(err.Error())
-			return
-		}
-	}
-	err = rows.Err()
-	if err != nil {
-		log.Println(err.Error())
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
@@ -58,32 +40,29 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 // AddUserHandler insert a user in mysql
 func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 	var user models.User
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&user)
 	if err != nil {
-		log.Println(err.Error())
-		return
-	}
-	if err := r.Body.Close(); err != nil {
-		log.Println(err.Error())
-		return
-	}
-	if err := json.Unmarshal(body, &user); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(422) // unprocessable entity
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			log.Println(err.Error())
-			return
-		}
+		w.WriteHeader(422)
+		return
 	}
+
+	fmt.Println(user)
 
 	db, err := sql.Open("mysql", "root:@/porrify")
-
-	stmt, err := db.Prepare("INSERT INTO user(email, name, nickname, avatar) VALUES(?,?,?,?)")
 	if err != nil {
 		log.Println(err.Error())
 		return
 	}
-	_, err = stmt.Exec(user.Email, user.Name, user.Nickname, user.Avatar)
+
+	stmt, err := db.Prepare("INSERT INTO user(id, email, name, nickname, avatar) VALUES(?,?,?,?,?)")
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	_, err = stmt.Exec(user.ID, user.Email, user.Name, user.Nickname, user.Avatar)
 	if err != nil {
 		log.Println(err.Error())
 		return

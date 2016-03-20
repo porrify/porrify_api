@@ -20,6 +20,9 @@ func main() {
 
 	r.HandleFunc("/categories/{category}/pilots", handlers.PilotsHandler).Methods("GET")
 
+	r.HandleFunc("/bets", handlers.AddBetHandler).Methods("POST")
+	r.HandleFunc("/users/{user_id}/circuits/{circuit_id}/bets", handlers.BetHandler).Methods("GET")
+
 	http.ListenAndServe(":8888", corsHandler(r))
 }
 

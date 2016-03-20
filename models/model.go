@@ -2,7 +2,7 @@ package models
 
 // User represents a user
 type User struct {
-	ID       int    `json:"id"`
+	ID       string `json:"id"`
 	Email    string `json:"email"`
 	Name     string `json:"name"`
 	Nickname string `json:"nickname"`
@@ -26,4 +26,30 @@ type Circuit struct {
 	Name    string `json:"name"`
 	Country string `json:"country"`
 	Day     string `json:"day"` //TODO: Get day properly
+}
+
+// BetRace represents a bet for the race
+type BetRace struct {
+	MotoGP  BetCategory `json:"motogp"`
+	Circuit int         `json:"circuit"`
+	User    string      `json:"user"`
+}
+
+// BetCategory represents a bet for a category
+type BetCategory struct {
+	Pole   int `json:"pole"`
+	First  int `json:"first"`
+	Second int `json:"second"`
+	Third  int `json:"third"`
+}
+
+// Bet represents a single bet
+type Bet struct {
+	ID        int      `json:"id"`
+	Category  Category `json:"category"`
+	Circuit   int      `json:"circuit"`
+	Pilot     int      `json:"pilot"`
+	Position  int      `json:"position"`
+	User      string   `json:"user"`
+	UpdatedAt string   `json:"updated_at"` //TODO: Get date properly
 }

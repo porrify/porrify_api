@@ -53,5 +53,7 @@ func PilotsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(w).Encode(pilots)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"pilots": pilots,
+	})
 }

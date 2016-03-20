@@ -30,22 +30,10 @@ func CircuitHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := db.Query("SELECT * FROM circuit WHERE id = ?", id)
+	err = db.QueryRow("SELECT * FROM circuit WHERE id = ?", id).
+		Scan(&circuit.ID, &circuit.Name, &circuit.Country, &circuit.Day)
 	if err != nil {
-		log.Println(err.Error())
-		return
-	}
-	defer rows.Close()
-	for rows.Next() {
-		err := rows.Scan(&circuit.ID, &circuit.Name, &circuit.Country, &circuit.Day)
-		if err != nil {
-			log.Println(err.Error())
-			return
-		}
-	}
-	err = rows.Err()
-	if err != nil {
-		log.Println(err.Error())
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
@@ -85,5 +73,7 @@ func AllCircuitsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(w).Encode(circuits)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"circuits": circuits,
+	})
 }
