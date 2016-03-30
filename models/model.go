@@ -31,6 +31,8 @@ type Circuit struct {
 // BetRace represents a bet for the race
 type BetRace struct {
 	MotoGP  BetCategory `json:"motogp"`
+	Moto2   BetCategory `json:"moto2"`
+	Moto3   BetCategory `json:"moto3"`
 	Circuit int         `json:"circuit"`
 	User    string      `json:"user"`
 }

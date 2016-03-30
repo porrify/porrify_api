@@ -55,7 +55,7 @@ func BetHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// AddBetHandler returns a user
+// AddBetHandler add or update a bet
 func AddBetHandler(w http.ResponseWriter, r *http.Request) {
 	var betRace models.BetRace
 
@@ -143,6 +143,70 @@ func bets(br *models.BetRace) []*models.Bet {
 		User:     br.User,
 	}
 	bets = append(bets, motogpThirdBet)
+	moto2PoleBet := &models.Bet{
+		Category: 2,
+		Circuit:  br.Circuit,
+		Pilot:    br.Moto2.Pole,
+		Position: 0,
+		User:     br.User,
+	}
+	bets = append(bets, moto2PoleBet)
+	moto2FirstBet := &models.Bet{
+		Category: 2,
+		Circuit:  br.Circuit,
+		Pilot:    br.Moto2.First,
+		Position: 1,
+		User:     br.User,
+	}
+	bets = append(bets, moto2FirstBet)
+	moto2SecondBet := &models.Bet{
+		Category: 2,
+		Circuit:  br.Circuit,
+		Pilot:    br.Moto2.Second,
+		Position: 2,
+		User:     br.User,
+	}
+	bets = append(bets, moto2SecondBet)
+	moto2ThirdBet := &models.Bet{
+		Category: 2,
+		Circuit:  br.Circuit,
+		Pilot:    br.Moto2.Third,
+		Position: 3,
+		User:     br.User,
+	}
+	bets = append(bets, moto2ThirdBet)
+	moto3PoleBet := &models.Bet{
+		Category: 3,
+		Circuit:  br.Circuit,
+		Pilot:    br.Moto3.Pole,
+		Position: 0,
+		User:     br.User,
+	}
+	bets = append(bets, moto3PoleBet)
+	moto3FirstBet := &models.Bet{
+		Category: 3,
+		Circuit:  br.Circuit,
+		Pilot:    br.Moto3.First,
+		Position: 1,
+		User:     br.User,
+	}
+	bets = append(bets, moto3FirstBet)
+	moto3SecondBet := &models.Bet{
+		Category: 3,
+		Circuit:  br.Circuit,
+		Pilot:    br.Moto3.Second,
+		Position: 2,
+		User:     br.User,
+	}
+	bets = append(bets, moto3SecondBet)
+	moto3ThirdBet := &models.Bet{
+		Category: 3,
+		Circuit:  br.Circuit,
+		Pilot:    br.Moto3.Third,
+		Position: 3,
+		User:     br.User,
+	}
+	bets = append(bets, moto3ThirdBet)
 
 	return bets
 }
