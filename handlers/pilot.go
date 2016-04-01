@@ -29,6 +29,7 @@ func PilotsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		return
 	}
+	defer db.Close()
 
 	rows, err := db.Query("SELECT * FROM pilot WHERE category = ?", category)
 	if err != nil {

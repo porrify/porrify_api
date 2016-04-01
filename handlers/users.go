@@ -25,6 +25,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		return
 	}
+	defer db.Close()
 
 	err = db.QueryRow("SELECT * FROM user WHERE id = ?", id).
 		Scan(&user.ID, &user.Email, &user.Name, &user.Nickname, &user.Avatar)
@@ -56,6 +57,7 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		return
 	}
+	defer db.Close()
 
 	stmt, err := db.Prepare("INSERT INTO user(id, email, name, nickname, avatar) VALUES(?,?,?,?,?)")
 	if err != nil {

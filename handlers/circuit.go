@@ -29,6 +29,7 @@ func CircuitHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		return
 	}
+	defer db.Close()
 
 	err = db.QueryRow("SELECT * FROM circuit WHERE id = ?", id).
 		Scan(&circuit.ID, &circuit.Name, &circuit.Country, &circuit.Day)
@@ -50,6 +51,7 @@ func AllCircuitsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		return
 	}
+	defer db.Close()
 
 	rows, err := db.Query("SELECT * FROM circuit")
 	if err != nil {

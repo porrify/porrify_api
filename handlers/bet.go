@@ -25,6 +25,7 @@ func BetHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		return
 	}
+	defer db.Close()
 
 	rows, err := db.Query("SELECT * FROM bet WHERE user = ? AND circuit = ?", userID, circuitID)
 	if err != nil {
@@ -71,6 +72,7 @@ func AddBetHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err.Error())
 		return
 	}
+	defer db.Close()
 
 	stmtInsert, err := db.Prepare("INSERT INTO bet(category, circuit, pilot, position, user, updatedAt) VALUES(?,?,?,?,?,?)")
 	if err != nil {
