@@ -1,15 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"github.com/neomede/porrify_api/handlers"
+
+	"github.com/codegangsta/negroni"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	fmt.Println("Listening...")
+	log.Println("Listening...")
+	n := negroni.Classic()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/users/{id}", handlers.UserHandler).Methods("GET")
@@ -23,7 +26,8 @@ func main() {
 	r.HandleFunc("/bets", handlers.AddBetHandler).Methods("POST")
 	r.HandleFunc("/users/{user_id}/circuits/{circuit_id}/bets", handlers.BetHandler).Methods("GET")
 
-	http.ListenAndServe(":8888", corsHandler(r))
+	n.UseHandler(corsHandler(r))
+	n.Run(":8888")
 }
 
 func corsHandler(h http.Handler) http.HandlerFunc {

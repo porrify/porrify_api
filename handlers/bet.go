@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -63,7 +62,7 @@ func AddBetHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&betRace)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return
 	}
 
@@ -91,7 +90,7 @@ func AddBetHandler(w http.ResponseWriter, r *http.Request) {
 		err = db.QueryRow("SELECT * FROM bet WHERE user = ? AND circuit = ? AND category = ? AND position = ?", bet.User, bet.Circuit, bet.Category, bet.Position).
 			Scan(&currentBet.ID, &currentBet.Category, &currentBet.Circuit, &currentBet.Pilot, &currentBet.Position, &currentBet.User, &currentBet.UpdatedAt)
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 			_, err = stmtInsert.Exec(bet.Category, bet.Circuit, bet.Pilot, bet.Position, bet.User, time.Now())
 			if err != nil {
 				log.Println(err.Error())
