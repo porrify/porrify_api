@@ -1,16 +1,17 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/codegansta/negroni"
-	"github.com/gorilla/mux"
 	"github.com/neomede/porrify_api/handlers"
+
+	"github.com/codegangsta/negroni"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	fmt.Println("Listening...")
+	log.Println("Listening...")
 	n := negroni.Classic()
 
 	r := mux.NewRouter()
