@@ -51,7 +51,7 @@ func BetHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"bets": bets,
+		"bets": bets, //TODO: Return this without key -> see get all users
 	})
 }
 
