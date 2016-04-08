@@ -37,6 +37,42 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
+// UsersHandler returns a user
+func UsersHandler(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("mysql", "root:@/porrify")
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM user")
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	defer rows.Close()
+
+	var users []*models.User
+	for rows.Next() {
+		var user models.User
+		err := rows.Scan(&user.ID, &user.Email, &user.Name, &user.Nickname, &user.Avatar)
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
+		users = append(users, &user)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(w).Encode(users)
+}
+
 // AddUserHandler insert a user in mysql
 func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 	var user models.User

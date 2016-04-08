@@ -17,6 +17,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/users/{id}", handlers.UserHandler).Methods("GET")
 	r.HandleFunc("/users", handlers.AddUserHandler).Methods("POST")
+	r.HandleFunc("/users", handlers.UsersHandler).Methods("GET")
 
 	r.HandleFunc("/circuits", handlers.AllCircuitsHandler).Methods("GET")
 	r.HandleFunc("/circuits/{id}", handlers.CircuitHandler).Methods("GET")
