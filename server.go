@@ -1,20 +1,42 @@
-package main
+package porrify
 
 import (
-	"log"
+	"database/sql"
 	"net/http"
-
-	"github.com/neomede/porrify_api/handlers"
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
+	"github.com/porrify/porrify_api/database"
+	"github.com/porrify/porrify_api/handlers"
 )
 
-func main() {
-	log.Println("Listening...")
-	n := negroni.Classic()
+type Config struct {
+	//database
+	MysqlUser     string
+	MysqlPassword string
+	MysqlHost     string
+	MysqlPort     string
+	MysqlDB       string
+}
 
+type properties struct {
+	//database
+	db *sql.DB
+}
+
+var prefixVersion string = "/v1"
+
+func initProperties(config *Config) *properties {
+	properties := new(properties)
+	properties.db = database.OpenDB(config.MysqlUser, config.MysqlPassword,
+		config.MysqlHost, config.MysqlPort, config.MysqlDB)
+	return properties
+}
+
+func Run(config *Config) {
+	n := negroni.Classic()
 	r := mux.NewRouter()
+
 	r.HandleFunc("/users/{id}", handlers.UserHandler).Methods("GET")
 	r.HandleFunc("/users", handlers.AddUserHandler).Methods("POST")
 	r.HandleFunc("/users", handlers.UsersHandler).Methods("GET")
@@ -26,6 +48,10 @@ func main() {
 
 	r.HandleFunc("/bets", handlers.AddBetHandler).Methods("POST")
 	r.HandleFunc("/users/{user_id}/circuits/{circuit_id}/bets", handlers.BetHandler).Methods("GET")
+
+	//TODO better logging, check logrus
+	prop := initProperties(config)
+	defer prop.db.Close()
 
 	n.UseHandler(corsHandler(r))
 	n.Run(":8888")
