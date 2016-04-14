@@ -54,7 +54,7 @@ func Run(config *Config) {
 	defer prop.db.Close()
 
 	n.UseHandler(corsHandler(r))
-	n.Run(":8888")
+	n.Run(":80")
 }
 
 func corsHandler(h http.Handler) http.HandlerFunc {
