@@ -24,7 +24,7 @@ type properties struct {
 	db *sql.DB
 }
 
-var prefixVersion string = "/v1"
+var prefixVersion = "/v1"
 
 func initProperties(config *Config) *properties {
 	properties := new(properties)

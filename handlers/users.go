@@ -9,7 +9,7 @@ import (
 	// Import mysql driver
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
-	"github.com/neomede/porrify_api/models"
+	"github.com/porrify/porrify_api/models"
 )
 
 // UserHandler returns a user
